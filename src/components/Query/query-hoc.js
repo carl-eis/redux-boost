@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ReactReduxContext } from 'react-redux'
 import { RestQuery } from './QueryContainer'
 
 export const restQuery = config => WrappedComponent => {
@@ -51,29 +52,35 @@ export const restQuery = config => WrappedComponent => {
         config.shouldSkip = this.applyProps(skip)
       }
 
+      const Context = this.props.context || ReactReduxContext
+
       return (
-        <RestQuery {...config} {...this.props}>
-          {result => {
-            const propName = config.name || 'data'
-            let childProps = { [propName]: result }
+        <Context.Consumer>
+          {({ store }) => (
+            <RestQuery store={store} {...config} {...this.props}>
+              {result => {
+                const propName = config.name || 'data'
+                let childProps = { [propName]: result }
 
-            if (config.props) {
-              const newResult = {
-                [propName]: result,
-                ownProps: this.props,
-              }
+                if (config.props) {
+                  const newResult = {
+                    [propName]: result,
+                    ownProps: this.props,
+                  }
 
-              lastResultProps = config.props(newResult, lastResultProps)
-              childProps = lastResultProps
-            }
+                  lastResultProps = config.props(newResult, lastResultProps)
+                  childProps = lastResultProps
+                }
 
-            if (Placeholder && result.loading) {
-              return <Placeholder {...this.props} />
-            }
+                if (Placeholder && result.loading) {
+                  return <Placeholder {...this.props} />
+                }
 
-            return <WrappedComponent {...this.props} {...childProps} />
-          }}
-        </RestQuery>
+                return <WrappedComponent {...this.props} {...childProps} />
+              }}
+            </RestQuery>
+          )}
+        </Context.Consumer>
       )
     }
   }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ReactReduxContext } from 'react-redux'
 import { RestMutation } from './MutationContainer'
 
 export const restMutation = config => WrappedComponent => {
@@ -41,27 +42,38 @@ export const restMutation = config => WrappedComponent => {
         ...this.applyProps(options),
       }
 
+      const Context = this.props.context || ReactReduxContext
+
       return (
-        <RestMutation options={options} {...config} {...this.props}>
-          {(mutate, r) => {
-            const result = { mutate, ...r }
+        <Context.Consumer>
+          {({ store }) => (
+            <RestMutation
+              store={store}
+              options={options}
+              {...config}
+              {...this.props}
+            >
+              {(mutate, r) => {
+                const result = { mutate, ...r }
 
-            const propName = config.name || 'data'
-            let childProps = { [propName]: result }
+                const propName = config.name || 'data'
+                let childProps = { [propName]: result }
 
-            if (config.props) {
-              const newResult = {
-                [propName]: result,
-                ownProps: this.props,
-              }
+                if (config.props) {
+                  const newResult = {
+                    [propName]: result,
+                    ownProps: this.props,
+                  }
 
-              lastResultProps = config.props(newResult, lastResultProps)
-              childProps = lastResultProps
-            }
+                  lastResultProps = config.props(newResult, lastResultProps)
+                  childProps = lastResultProps
+                }
 
-            return <WrappedComponent {...this.props} {...childProps} />
-          }}
-        </RestMutation>
+                return <WrappedComponent {...this.props} {...childProps} />
+              }}
+            </RestMutation>
+          )}
+        </Context.Consumer>
       )
     }
   }
