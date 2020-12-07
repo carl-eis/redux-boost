@@ -1,5 +1,5 @@
 {
-  "name": "redux-boost",
+  "name": "@nova-web/redux-boost",
   "version": "0.1.0",
   "license": "MIT",
   "description": "Redux-Boost",
