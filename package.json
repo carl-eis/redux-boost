@@ -1,6 +1,6 @@
 {
   "name": "@nova-web/redux-boost",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "Redux-Boost",
   "main": "lib/index.js",
