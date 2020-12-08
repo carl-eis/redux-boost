@@ -8,6 +8,7 @@ function applyMethodToExecutor(executor, payload, method) {
 const defaultConfig = {
   method: 'get',
   serialize: identity,
+  serializeError: identity,
   executor: global.fetch,
   prepareExecutor: applyMethodToExecutor,
   onError: identity,
@@ -46,6 +47,7 @@ export const createRequestMiddleware = customConfig => ({ dispatch }) => {
         payload,
         method = config.method,
         serialize = config.serialize,
+        serializeError = config.serializeError,
         executor = config.executor,
         prepareExecutor = config.prepareExecutor,
         saveRequestResult = config.saveRequestResult,
@@ -76,12 +78,12 @@ export const createRequestMiddleware = customConfig => ({ dispatch }) => {
       onSuccess({ name, result: serialized })
 
       return serialized
-    } catch (error) {
+    } catch (err) {
+      const error = serializeError(err)
+
       reject(error)
 
-      const { message, stack } = error
-
-      dispatch(requestActions.fetchFail({ name, error: message, stack }))
+      dispatch(requestActions.fetchFail({ name, error }))
 
       onError({ name, error })
 
