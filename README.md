@@ -17,6 +17,14 @@ or
 
 `yarn add redux-boost`
 
+## Development
+
+You will need a few global node modules installed.
+
+```
+npm install -g npm-run-all
+```
+
 
 ## Documentation
 
@@ -147,7 +155,7 @@ const FriendList = props => {
 
 export default restQuery({
   // a unique name the request, will be used as a prop name and redux state key
-  name: 'getFriends'
+  name: 'getFriends',
 
   // options allows to use ownProps of the component
   // to create dynamic parts of the query
