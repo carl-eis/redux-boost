@@ -8,7 +8,7 @@
   "jsnext:main": "es/index.js",
   "sideEffects": false,
   "scripts": {
-    "precommit": "lint-staged",
+    "huskyprecommit": "lint-staged",
     "format": "prettier --write \"**/*.{js,md}\"",
     "format:check": "prettier --list-different \"**/*.{js,md}\"",
     "lint": "eslint src test",
