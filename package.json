@@ -21,7 +21,7 @@
     "check": "npm-check -u",
     "clean": "rimraf coverage dist es lib",
     "prepublishOnly": "run-s build",
-    "pub": "npx np || true"
+    "pub": "npx np --yolo || true"
   },
   "files": [
     "es",
