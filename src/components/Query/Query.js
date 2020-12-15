@@ -57,12 +57,20 @@ export class RestQueryComponent extends Component {
   }
 
   fetchData = async () => {
-    if (this.props.shouldSkip) return null
+    if (this.props.shouldSkip) {
+      return null
+    }
 
     const { query, fetchStart, action = fetchStart } = this.props
 
+    // TODO: Rework this try-catch block.
+    // It was made this way for a reason but looks awful.
+    // We don't want to change the way errors are handled in the main app.
+
     try {
       const result = await new Promise((resolve, reject) => {
+        // Convert the query object to requestAction
+        // which returns a promisified fetch
         const requestAction = action(query, {
           resolve,
           reject,
@@ -70,12 +78,15 @@ export class RestQueryComponent extends Component {
 
         // Handy to use with thunks
         if (requestAction.then) {
-          requestAction.then(resp => resolve(resp)).catch(err => reject(err))
+          requestAction
+            .then(response => resolve(response))
+            .catch(ex => reject(ex))
         }
       })
 
+      // Result is not guaranteed to have entities
       this.updateState({
-        entities: result.entities,
+        entities: result ? result.entities : undefined,
       })
 
       return result

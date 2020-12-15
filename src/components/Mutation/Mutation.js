@@ -63,8 +63,9 @@ export class RestMutationComponent extends Component {
         }
       })
 
+      // Result is not guaranteed to have entities
       this.updateState({
-        entities: result.entities,
+        entities: result ? result.entities : undefined,
       })
 
       return result
